@@ -27,8 +27,7 @@ export const playerStore = createStore<PlayerState>("fb.player", { status: "idle
 export const usePlayer = playerStore.use;
 
 export async function playTrack(t: Track) {
-  const cur = playerStore.get();
-  if (cur.trackId) getProvider(playerStore.get().trackId ? "synth" : "")?.stop();
+  Object.values(PROVIDERS).forEach((x) => x.stop());
   const p = getProvider(t.providerId);
   if (!p || !p.canPlay(t)) {
     playerStore.set({ trackId: t.id, status: "error", error: "This is sample metadata only — no audio is available for it yet." });
