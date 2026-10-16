@@ -65,13 +65,13 @@ function tone(t: number, midi: number, dur: number, vol: number, type: Oscillato
 }
 
 function play(i: number, t: number) {
-  const s = spec!, beat = 60 / s.bpm, prog = [0, 5, 3, 7][Math.floor(i / 16) % 4];
+  const s = spec!, beat = 60 / s.bpm, prog = [0, 5, 3, 7][Math.floor(i / 16) % 4]!;
   const drums = s.style !== "ambient";
   if (drums && i % 4 === 0) kick(t);
   if (drums && i % 4 === 2) hat(t, s.energy === "high" ? 0.22 : 0.14);
   if (drums && s.energy === "high" && i % 2 === 1) hat(t, 0.05);
   if (drums && i % 4 === 2) tone(t, s.root + prog - 12, beat / 2, 0.25, "sawtooth", s.style === "techno" ? 500 : 900);
-  if (s.style === "trance" && i % 2 === 0) tone(t, s.root + prog + 12 + [0, 7, 12, 7][(i / 2) % 4], beat / 3, 0.06, "square", 2500);
+  if (s.style === "trance" && i % 2 === 0) tone(t, s.root + prog + 12 + [0, 7, 12, 7][(i / 2) % 4]!, beat / 3, 0.06, "square", 2500);
   if (i % 16 === 0) [0, 3, 7].forEach((n) => tone(t, s.root + prog + 12 + n, beat * 4, s.style === "ambient" ? 0.09 : 0.04, "triangle", 1800));
 }
 

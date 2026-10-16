@@ -5,13 +5,13 @@ export type SessionStatus = "idle" | "running" | "paused" | "finished";
 export interface FocusSession {
   mode: "focus" | "break";
   status: SessionStatus;
-  taskId?: string;
+  taskId?: string | undefined;
   durationSec: number;
   remainingSec: number;
-  endsAt?: number;
-  startedAt?: number;
+  endsAt?: number | undefined;
+  startedAt?: number | undefined;
   interruptions: number;
-  lastLogId?: string;
+  lastLogId?: string | undefined;
 }
 
 const initial: FocusSession = { mode: "focus", status: "idle", durationSec: 25 * 60, remainingSec: 25 * 60, interruptions: 0 };

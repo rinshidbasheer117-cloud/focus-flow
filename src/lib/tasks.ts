@@ -7,11 +7,11 @@ export interface Task {
   id: string;
   title: string;
   priority: Priority;
-  deadline?: string;
+  deadline?: string | undefined;
   steps: Step[];
   done: boolean;
   createdAt: number;
-  completedAt?: number;
+  completedAt?: number | undefined;
 }
 
 export const tasksStore = createStore<{ tasks: Task[] }>("fb.tasks", { tasks: [] });
@@ -20,7 +20,7 @@ export const useTasks = () => tasksStore.use().tasks;
 const mut = (fn: (t: Task[]) => Task[]) => tasksStore.set((s) => ({ tasks: fn(s.tasks) }));
 const patch = (id: string, fn: (t: Task) => Task) => mut((ts) => ts.map((t) => (t.id === id ? fn(t) : t)));
 
-export function addTask(input: { title: string; priority: Priority; deadline?: string; steps?: string[] }) {
+export function addTask(input: { title: string; priority: Priority; deadline?: string | undefined; steps?: string[] }) {
   const title = input.title.trim();
   if (!title) return null;
   const task: Task = {
@@ -39,7 +39,7 @@ export function moveTask(id: string, dir: -1 | 1) {
     const j = i + dir;
     if (i < 0 || j < 0 || j >= ts.length) return ts;
     const c = [...ts];
-    [c[i], c[j]] = [c[j], c[i]];
+    [c[i], c[j]] = [c[j]!, c[i]!];
     return c;
   });
 }
