@@ -2,13 +2,13 @@ import { createStore, uid } from "./store";
 
 export interface SessionLog {
   id: string;
-  taskId?: string;
+  taskId?: string | undefined;
   startedAt: number;
   endedAt: number;
   focusedSec: number;
   interruptions: number;
   completedTimer: boolean;
-  helpful?: boolean | null;
+  helpful?: boolean | null | undefined;
 }
 interface Progress { sessions: SessionLog[]; steps: { at: number; taskId: string }[]; }
 

@@ -28,7 +28,7 @@ function Onboarding() {
       <h1 className="mt-6 text-3xl font-bold">{step === 0 ? "What gets you moving?" : "How do you like to work?"}</h1>
       <p className="mt-2 text-sm text-muted-foreground">Step {step + 1} of 2 · Only what's needed to tune the app. You can change this anytime. No diagnosis or health details required.</p>
       <div className="surface mt-6 p-5">
-        <PrefsForm value={p} onChange={(x) => setP((s) => ({ ...s, ...x }))} sections={[...sections[step]]} />
+        <PrefsForm value={p} onChange={(x) => setP((s) => ({ ...s, ...x }))} sections={[...(sections[step] ?? sections[0])]} />
       </div>
       <div className="mt-6 flex justify-between gap-3">
         {step === 0 ? <button className="btn btn-ghost" onClick={finish}>Skip, use defaults</button> : <button className="btn btn-ghost" onClick={() => setStep(0)}>Back</button>}

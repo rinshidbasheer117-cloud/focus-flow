@@ -22,7 +22,7 @@ const PROVIDERS: Record<string, MusicProvider> = { synth: synthProvider };
 export const getProvider = (id: string) => PROVIDERS[id];
 export const isPlayable = (t: Track) => !!getProvider(t.providerId)?.canPlay(t);
 
-interface PlayerState { trackId?: string; status: "idle" | "loading" | "playing" | "error"; error?: string; }
+interface PlayerState { trackId?: string | undefined; status: "idle" | "loading" | "playing" | "error"; error?: string | undefined; }
 export const playerStore = createStore<PlayerState>("fb.player", { status: "idle" }, false);
 export const usePlayer = playerStore.use;
 
