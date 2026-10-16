@@ -14,13 +14,253 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      active_sessions: {
+        Row: {
+          state: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          state: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          state?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      focus_sessions: {
+        Row: {
+          completed_timer: boolean
+          created_at: string
+          ended_at: string
+          focused_sec: number
+          helpful: boolean | null
+          id: string
+          interruptions: number
+          started_at: string
+          task_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_timer?: boolean
+          created_at?: string
+          ended_at: string
+          focused_sec: number
+          helpful?: boolean | null
+          id: string
+          interruptions?: number
+          started_at: string
+          task_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          completed_timer?: boolean
+          created_at?: string
+          ended_at?: string
+          focused_sec?: number
+          helpful?: boolean | null
+          id?: string
+          interruptions?: number
+          started_at?: string
+          task_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "focus_sessions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      music_feedback: {
+        Row: {
+          kind: string
+          track_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          kind: string
+          track_id: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          kind?: string
+          track_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          animations: boolean
+          break_minutes: number
+          created_at: string
+          display_name: string | null
+          energy: string
+          genres: string[]
+          onboarded: boolean
+          reduced_motion: boolean
+          reminders: boolean
+          session_minutes: number
+          updated_at: string
+          user_id: string
+          vocals: string
+        }
+        Insert: {
+          animations?: boolean
+          break_minutes?: number
+          created_at?: string
+          display_name?: string | null
+          energy?: string
+          genres?: string[]
+          onboarded?: boolean
+          reduced_motion?: boolean
+          reminders?: boolean
+          session_minutes?: number
+          updated_at?: string
+          user_id: string
+          vocals?: string
+        }
+        Update: {
+          animations?: boolean
+          break_minutes?: number
+          created_at?: string
+          display_name?: string | null
+          energy?: string
+          genres?: string[]
+          onboarded?: boolean
+          reduced_motion?: boolean
+          reminders?: boolean
+          session_minutes?: number
+          updated_at?: string
+          user_id?: string
+          vocals?: string
+        }
+        Relationships: []
+      }
+      step_events: {
+        Row: {
+          at: string
+          id: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          at?: string
+          id: string
+          task_id: string
+          user_id?: string
+        }
+        Update: {
+          at?: string
+          id?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      task_steps: {
+        Row: {
+          created_at: string
+          done: boolean
+          id: string
+          position: number
+          task_id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          done?: boolean
+          id: string
+          position?: number
+          task_id: string
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          done?: boolean
+          id?: string
+          position?: number
+          task_id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_steps_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          deadline: string | null
+          deleted_at: string | null
+          done: boolean
+          id: string
+          position: number
+          priority: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          deadline?: string | null
+          deleted_at?: string | null
+          done?: boolean
+          id: string
+          position?: number
+          priority?: string
+          title: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          deadline?: string | null
+          deleted_at?: string | null
+          done?: boolean
+          id?: string
+          position?: number
+          priority?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      sync_task: { Args: { p: Json }; Returns: string }
     }
     Enums: {
       [_ in never]: never
