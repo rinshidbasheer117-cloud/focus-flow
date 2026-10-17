@@ -11,7 +11,7 @@ import { isPlayable, playTrack, stopPlayback, usePlayer } from "@/lib/music/prov
 import { recommend, useFeedback } from "@/lib/music/recommend";
 import { rateSession, useProgress } from "@/lib/progress";
 
-export const Route = createFileRoute("/focus")({
+export const Route = createFileRoute("/_authenticated/focus")({
   head: () => ({
     meta: [
       { title: "Focus · FocusBeat" },

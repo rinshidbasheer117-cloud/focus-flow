@@ -8,7 +8,7 @@ import {
 import { configure, selectTask, sessionStore } from "@/lib/session";
 import { prefsStore } from "@/lib/prefs";
 
-export const Route = createFileRoute("/tasks")({
+export const Route = createFileRoute("/_authenticated/tasks")({
   head: () => ({
     meta: [
       { title: "Tasks · FocusBeat" },

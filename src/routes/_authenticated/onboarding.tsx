@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { PrefsForm } from "@/components/PrefsForm";
 import { defaultPrefs, prefsStore, updatePrefs, type Preferences } from "@/lib/prefs";
 
-export const Route = createFileRoute("/onboarding")({
+export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
     meta: [
       { title: "Get started · FocusBeat" },

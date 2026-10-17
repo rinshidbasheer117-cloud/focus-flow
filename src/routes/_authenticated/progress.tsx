@@ -3,7 +3,7 @@ import { PageHeader, EmptyState } from "@/components/AppShell";
 import { useProgress } from "@/lib/progress";
 import { useTasks } from "@/lib/tasks";
 
-export const Route = createFileRoute("/progress")({
+export const Route = createFileRoute("/_authenticated/progress")({
   head: () => ({
     meta: [
       { title: "Progress · FocusBeat" },
