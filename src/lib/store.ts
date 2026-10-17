@@ -34,7 +34,8 @@ export function createStore<T extends object>(key: string, initial: T, persist =
     return () => void subs.delete(cb);
   };
   const use = () => useSyncExternalStore(subscribe, get, () => initial);
-  return { get, set, subscribe, use, key };
+  const reset = () => set(initial);
+  return { get, set, subscribe, use, key, reset, initial };
 }
 
 export const uid = () =>
