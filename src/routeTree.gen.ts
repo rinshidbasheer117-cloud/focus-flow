@@ -9,91 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as FocusRouteImport } from './routes/focus'
-import { Route as MusicRouteImport } from './routes/music'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as PlusRouteImport } from './routes/plus'
-import { Route as ProgressRouteImport } from './routes/progress'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedFocusRouteImport } from './routes/_authenticated/focus'
+import { Route as AuthenticatedMusicRouteImport } from './routes/_authenticated/music'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedPlusRouteImport } from './routes/_authenticated/plus'
+import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const FocusRoute = FocusRouteImport.update({
+const AuthenticatedFocusRoute = AuthenticatedFocusRouteImport.update({
   id: '/focus',
   path: '/focus',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const MusicRoute = MusicRouteImport.update({
+const AuthenticatedMusicRoute = AuthenticatedMusicRouteImport.update({
   id: '/music',
   path: '/music',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const OnboardingRoute = OnboardingRouteImport.update({
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const PlusRoute = PlusRouteImport.update({
+const AuthenticatedPlusRoute = AuthenticatedPlusRouteImport.update({
   id: '/plus',
   path: '/plus',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ProgressRoute = ProgressRouteImport.update({
+const AuthenticatedProgressRoute = AuthenticatedProgressRouteImport.update({
   id: '/progress',
   path: '/progress',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const SettingsRoute = SettingsRouteImport.update({
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const TasksRoute = TasksRouteImport.update({
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/focus': typeof FocusRoute
-  '/music': typeof MusicRoute
-  '/onboarding': typeof OnboardingRoute
-  '/plus': typeof PlusRoute
-  '/progress': typeof ProgressRoute
-  '/settings': typeof SettingsRoute
-  '/tasks': typeof TasksRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/focus': typeof AuthenticatedFocusRoute
+  '/music': typeof AuthenticatedMusicRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/plus': typeof AuthenticatedPlusRoute
+  '/progress': typeof AuthenticatedProgressRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/tasks': typeof AuthenticatedTasksRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/focus': typeof FocusRoute
-  '/music': typeof MusicRoute
-  '/onboarding': typeof OnboardingRoute
-  '/plus': typeof PlusRoute
-  '/progress': typeof ProgressRoute
-  '/settings': typeof SettingsRoute
-  '/tasks': typeof TasksRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/focus': typeof AuthenticatedFocusRoute
+  '/music': typeof AuthenticatedMusicRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/plus': typeof AuthenticatedPlusRoute
+  '/progress': typeof AuthenticatedProgressRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/tasks': typeof AuthenticatedTasksRoute
+  '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/focus': typeof FocusRoute
-  '/music': typeof MusicRoute
-  '/onboarding': typeof OnboardingRoute
-  '/plus': typeof PlusRoute
-  '/progress': typeof ProgressRoute
-  '/settings': typeof SettingsRoute
-  '/tasks': typeof TasksRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/focus': typeof AuthenticatedFocusRoute
+  '/_authenticated/music': typeof AuthenticatedMusicRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/plus': typeof AuthenticatedPlusRoute
+  '/_authenticated/progress': typeof AuthenticatedProgressRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/tasks': typeof AuthenticatedTasksRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/reset-password'
     | '/focus'
     | '/music'
     | '/onboarding'
@@ -103,7 +129,8 @@ export interface FileRouteTypes {
     | '/tasks'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/auth'
+    | '/reset-password'
     | '/focus'
     | '/music'
     | '/onboarding'
@@ -111,99 +138,139 @@ export interface FileRouteTypes {
     | '/progress'
     | '/settings'
     | '/tasks'
+    | '/'
   id:
     | '__root__'
-    | '/'
-    | '/focus'
-    | '/music'
-    | '/onboarding'
-    | '/plus'
-    | '/progress'
-    | '/settings'
-    | '/tasks'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/focus'
+    | '/_authenticated/music'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/plus'
+    | '/_authenticated/progress'
+    | '/_authenticated/settings'
+    | '/_authenticated/tasks'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  FocusRoute: typeof FocusRoute
-  MusicRoute: typeof MusicRoute
-  OnboardingRoute: typeof OnboardingRoute
-  PlusRoute: typeof PlusRoute
-  ProgressRoute: typeof ProgressRoute
-  SettingsRoute: typeof SettingsRoute
-  TasksRoute: typeof TasksRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/focus': {
-      id: '/focus'
+    '/_authenticated/focus': {
+      id: '/_authenticated/focus'
       path: '/focus'
       fullPath: '/focus'
-      preLoaderRoute: typeof FocusRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedFocusRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/music': {
-      id: '/music'
+    '/_authenticated/music': {
+      id: '/_authenticated/music'
       path: '/music'
       fullPath: '/music'
-      preLoaderRoute: typeof MusicRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedMusicRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/onboarding': {
-      id: '/onboarding'
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/plus': {
-      id: '/plus'
+    '/_authenticated/plus': {
+      id: '/_authenticated/plus'
       path: '/plus'
       fullPath: '/plus'
-      preLoaderRoute: typeof PlusRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedPlusRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/progress': {
-      id: '/progress'
+    '/_authenticated/progress': {
+      id: '/_authenticated/progress'
       path: '/progress'
       fullPath: '/progress'
-      preLoaderRoute: typeof ProgressRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedProgressRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/settings': {
-      id: '/settings'
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/tasks': {
-      id: '/tasks'
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
       path: '/tasks'
       fullPath: '/tasks'
-      preLoaderRoute: typeof TasksRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedFocusRoute: typeof AuthenticatedFocusRoute
+  AuthenticatedMusicRoute: typeof AuthenticatedMusicRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedPlusRoute: typeof AuthenticatedPlusRoute
+  AuthenticatedProgressRoute: typeof AuthenticatedProgressRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedFocusRoute: AuthenticatedFocusRoute,
+  AuthenticatedMusicRoute: AuthenticatedMusicRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedPlusRoute: AuthenticatedPlusRoute,
+  AuthenticatedProgressRoute: AuthenticatedProgressRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTasksRoute: AuthenticatedTasksRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  FocusRoute: FocusRoute,
-  MusicRoute: MusicRoute,
-  OnboardingRoute: OnboardingRoute,
-  PlusRoute: PlusRoute,
-  ProgressRoute: ProgressRoute,
-  SettingsRoute: SettingsRoute,
-  TasksRoute: TasksRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
