@@ -1,6 +1,7 @@
 import type { Preferences } from "../prefs";
 import type { Track } from "./catalog";
 import { createStore } from "../store";
+import { markDirty } from "../sync/dirty";
 
 export const feedbackStore = createStore<{ likes: string[]; dislikes: string[] }>("fb.musicFeedback", { likes: [], dislikes: [] });
 export const useFeedback = feedbackStore.use;
@@ -9,6 +10,7 @@ export function setFeedback(id: string, kind: "like" | "dislike" | "none") {
     likes: kind === "like" ? [...new Set([...f.likes, id])] : f.likes.filter((x) => x !== id),
     dislikes: kind === "dislike" ? [...new Set([...f.dislikes, id])] : f.dislikes.filter((x) => x !== id),
   }));
+  markDirty("feedback");
 }
 
 /** Transparent rules-based scoring. Each rule produces a human-readable reason. */
