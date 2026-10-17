@@ -1,5 +1,6 @@
 import { createStore } from "./store";
 import { logSession } from "./progress";
+import { markDirty } from "./sync/dirty";
 
 export type SessionStatus = "idle" | "running" | "paused" | "finished";
 export interface FocusSession {
@@ -12,12 +13,18 @@ export interface FocusSession {
   startedAt?: number | undefined;
   interruptions: number;
   lastLogId?: string | undefined;
+  /** Last structural change (ms) — newest wins across devices. */
+  updatedAt?: number | undefined;
 }
 
 const initial: FocusSession = { mode: "focus", status: "idle", durationSec: 25 * 60, remainingSec: 25 * 60, interruptions: 0 };
 export const sessionStore = createStore<FocusSession>("fb.session", initial);
 export const useSession = sessionStore.use;
-const set = (p: Partial<FocusSession>) => sessionStore.set((s) => ({ ...s, ...p }));
+/** Structural change: persisted and synced so another device can restore it. */
+const set = (p: Partial<FocusSession>) => {
+  sessionStore.set((s) => ({ ...s, ...p, updatedAt: Date.now() }));
+  markDirty("active");
+};
 
 export const selectTask = (taskId?: string) => set({ taskId });
 
@@ -58,7 +65,7 @@ export function tick(now = Date.now()): boolean {
   if (s.status !== "running" || !s.endsAt) return false;
   const remaining = Math.max(0, Math.ceil((s.endsAt - now) / 1000));
   if (remaining > 0) {
-    if (remaining !== s.remainingSec) set({ remainingSec: remaining });
+    if (remaining !== s.remainingSec) sessionStore.set((x) => ({ ...x, remainingSec: remaining }));
     return false;
   }
   const lastLogId = record(true, now);

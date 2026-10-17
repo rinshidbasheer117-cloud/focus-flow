@@ -8,7 +8,7 @@ import { isPlayable, stopPlayback, usePlayer } from "@/lib/music/provider";
 import { recommend, useFeedback } from "@/lib/music/recommend";
 import { GENRES, usePrefs, type Energy, type Genre } from "@/lib/prefs";
 
-export const Route = createFileRoute("/music")({
+export const Route = createFileRoute("/_authenticated/music")({
   head: () => ({
     meta: [
       { title: "Music · FocusBeat" },

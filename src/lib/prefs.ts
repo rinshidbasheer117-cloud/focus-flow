@@ -1,4 +1,5 @@
 import { createStore } from "./store";
+import { markDirty } from "./sync/dirty";
 
 export type Genre = "progressive-house" | "melodic-techno" | "trance" | "instrumental-edm" | "high-energy" | "calm-electronic";
 export type Energy = "low" | "medium" | "high";
@@ -23,6 +24,7 @@ export interface Preferences {
   animations: boolean;
   reducedMotion: boolean;
   reminders: boolean;
+  updatedAt: number;
 }
 
 export const defaultPrefs: Preferences = {
@@ -35,10 +37,14 @@ export const defaultPrefs: Preferences = {
   animations: true,
   reducedMotion: false,
   reminders: true,
+  updatedAt: 0,
 };
 
 export const prefsStore = createStore<Preferences>("fb.prefs", defaultPrefs);
 export const usePrefs = prefsStore.use;
-export const updatePrefs = (p: Partial<Preferences>) => prefsStore.set((s) => ({ ...s, ...p }));
+export function updatePrefs(p: Partial<Preferences>) {
+  prefsStore.set((s) => ({ ...s, ...p, updatedAt: Date.now() }));
+  markDirty("prefs");
+}
 /** Motion is allowed only when animations are on AND reduced motion is off. */
 export const motionAllowed = (p: Preferences) => p.animations && !p.reducedMotion;

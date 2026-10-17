@@ -6,7 +6,7 @@ import { addTask, nextStep, openTasks, suggestNext, useTasks, type Priority } fr
 import { configure, selectTask, useSession, fmt } from "@/lib/session";
 import { EmptyState } from "@/components/AppShell";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Home · FocusBeat" },

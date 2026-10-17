@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { PageHeader } from "@/components/AppShell";
 import { PLANS, currentTier } from "@/lib/entitlements";
 
-export const Route = createFileRoute("/plus")({
+export const Route = createFileRoute("/_authenticated/plus")({
   head: () => ({
     meta: [
       { title: "Plans · FocusBeat" },

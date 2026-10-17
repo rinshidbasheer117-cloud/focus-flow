@@ -6,7 +6,7 @@ import { updatePrefs, usePrefs } from "@/lib/prefs";
 import { localAuth } from "@/lib/auth";
 import { configure, useSession } from "@/lib/session";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings · FocusBeat" },
