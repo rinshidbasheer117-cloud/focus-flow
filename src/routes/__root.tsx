@@ -14,6 +14,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/AppShell";
 import { Toaster } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { clearLocalAccountData, startSync } from "@/lib/sync/engine";
 
 function NotFoundComponent() {
   return (
@@ -83,6 +85,16 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => { if (data.session) void startSync(data.session.user.id); });
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) void startSync(session.user.id);
+      if (event === "SIGNED_OUT") { clearLocalAccountData(); queryClient.clear(); }
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") router.invalidate();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [router, queryClient]);
   return (
     <QueryClientProvider client={queryClient}>
       <AppShell><Outlet /></AppShell>

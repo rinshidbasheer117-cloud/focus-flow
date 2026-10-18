@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowRight, Plus, Play } from "lucide-react";
-import { prefsStore, usePrefs } from "@/lib/prefs";
+import { usePrefs } from "@/lib/prefs";
 import { addTask, nextStep, openTasks, suggestNext, useTasks, type Priority } from "@/lib/tasks";
 import { configure, selectTask, useSession, fmt } from "@/lib/session";
 import { EmptyState } from "@/components/AppShell";
@@ -25,9 +25,6 @@ function Home() {
   const session = useSession();
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<Priority>("medium");
-  useEffect(() => {
-    if (!prefsStore.get().onboarded) navigate({ to: "/onboarding" });
-  }, [navigate]);
 
   const suggestion = suggestNext(tasks);
   const top = openTasks(tasks).slice(0, 3);
