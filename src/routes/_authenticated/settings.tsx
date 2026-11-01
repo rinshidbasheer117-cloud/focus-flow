@@ -57,7 +57,7 @@ function SettingsPage() {
     setBusy("signout");
     await supabase.auth.signOut();
     clearLocalAccountData();
-    navigate({ to: "/auth", replace: true });
+    navigate({ to: "/auth", search: { redirect: undefined }, replace: true });
   };
   const wipe = async () => {
     if (prompt('This permanently deletes your account, tasks, steps, session history, preferences and music feedback. Type DELETE to confirm.') !== "DELETE") return;
@@ -66,7 +66,7 @@ function SettingsPage() {
       await del();
       clearLocalAccountData();
       await supabase.auth.signOut();
-      navigate({ to: "/auth", replace: true });
+      navigate({ to: "/auth", search: { redirect: undefined }, replace: true });
     } catch (e) { toast.error((e as Error).message); setBusy(null); }
   };
   return (
