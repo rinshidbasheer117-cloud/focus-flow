@@ -31,15 +31,15 @@ let running: Promise<void> | null = null;
 let rerun = false;
 
 class OfflineError extends Error {}
-function check<T>(res: { data: T; error: { message: string; code?: string } | null }): T {
+function check<T>(res: { data: T; error: { message: string; code?: string | undefined } | null }): NonNullable<T> | (T extends null ? never : T) {
   if (res.error) {
     const m = res.error.message || "";
     if (/fetch|network|Failed to fetch|Load failed/i.test(m)) throw new OfflineError(m);
-    const e = new Error(m) as Error & { code?: string };
+    const e = new Error(m) as Error & { code?: string | undefined };
     e.code = res.error.code;
     throw e;
   }
-  return res.data;
+  return res.data as never;
 }
 
 /* ---------------- push ---------------- */
@@ -139,7 +139,7 @@ async function pushAll() {
 
 async function pullAll() {
   const uid = userId!;
-  const [profile, tasks, steps, sessions, events, fb, active] = await Promise.all([
+  const [profile, tasksR, stepsR, sessionsR, eventsR, fbR, active] = await Promise.all([
     supabase.from("profiles").select("*").eq("user_id", uid).maybeSingle().then(check),
     supabase.from("tasks").select("*").order("position").then(check),
     supabase.from("task_steps").select("*").order("position").then(check),
@@ -148,6 +148,7 @@ async function pullAll() {
     supabase.from("music_feedback").select("*").then(check),
     supabase.from("active_sessions").select("*").eq("user_id", uid).maybeSingle().then(check),
   ]);
+  const tasks = tasksR ?? [], steps = stepsR ?? [], sessions = sessionsR ?? [], events = eventsR ?? [], fb = fbR ?? [];
 
   withoutTracking(() => {
     // Preferences: newest wins, unless a local change is still pending.
