@@ -11,3 +11,5 @@
 
 - Domain logic lives in `src/lib/*` modules (tasks, session, progress, prefs, music, entitlements, auth) behind small store/adapter interfaces; UI only calls them — so persistence/providers can be swapped later.
 - Subscription tier must come from a server-verified source, never a client toggle — billing safety.
+- Cloud sync runs use an identity-pinned client and generation guard; never apply an earlier account's requests to the current account's cache.
+- Keep failed writes dirty and preserve import backups until cloud confirmation; conflict choices belong to the user.
