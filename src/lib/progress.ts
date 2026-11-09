@@ -10,6 +10,7 @@ export interface SessionLog {
   interruptions: number;
   completedTimer: boolean;
   helpful?: boolean | null | undefined;
+  updatedAt?: number | undefined;
 }
 export interface StepEvent { id: string; at: number; taskId: string; }
 interface Progress { sessions: SessionLog[]; steps: StepEvent[]; }
@@ -26,13 +27,13 @@ export const sessionIdFor = (startedAt: number) =>
 
 export function logSession(s: Omit<SessionLog, "id">) {
   if (s.focusedSec < 5) return null; // ignore accidental starts
-  const entry = { ...s, id: sessionIdFor(s.startedAt) };
+  const entry = { ...s, id: sessionIdFor(s.startedAt), updatedAt: Date.now() };
   progressStore.set((p) => ({ ...p, sessions: [...p.sessions.filter((x) => x.id !== entry.id), entry] }));
   markDirty(`session:${entry.id}`);
   return entry;
 }
 export function rateSession(id: string, helpful: boolean) {
-  progressStore.set((p) => ({ ...p, sessions: p.sessions.map((s) => (s.id === id ? { ...s, helpful } : s)) }));
+  progressStore.set((p) => ({ ...p, sessions: p.sessions.map((s) => (s.id === id ? { ...s, helpful, updatedAt: Date.now() } : s)) }));
   markDirty(`session:${id}`);
 }
 export function logStep(taskId: string) {

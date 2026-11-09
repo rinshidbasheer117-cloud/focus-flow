@@ -36,9 +36,10 @@ export function analyze(b: GuestBackup) {
 
 export type PrefsChoice = "account" | "device";
 export type DuplicateChoice = "keep-both" | "skip";
+export type ConflictChoice = "account" | "device";
 
 /** Merge — never overwrites: same-id conflicts keep whichever copy is newer; account prefs kept unless user picks device. */
-export function importBackup(b: GuestBackup, opts: { prefs: PrefsChoice; duplicates: DuplicateChoice }) {
+export async function importBackup(b: GuestBackup, opts: { prefs: PrefsChoice; duplicates: DuplicateChoice; conflicts?: ConflictChoice }) {
   const cloud = tasksStore.get().tasks;
   const byId = new Map(cloud.map((t) => [t.id, t]));
   const titles = new Set(cloud.map((t) => t.title.trim().toLowerCase()));
@@ -47,8 +48,8 @@ export function importBackup(b: GuestBackup, opts: { prefs: PrefsChoice; duplica
     const updatedAt = t.updatedAt ?? t.completedAt ?? t.createdAt;
     const existing = byId.get(t.id);
     if (existing) {
-      if (updatedAt > (existing.updatedAt ?? 0)) {
-        next[next.indexOf(existing)] = { ...t, updatedAt };
+      if (opts.conflicts === "device") {
+        next[next.indexOf(existing)] = { ...t, updatedAt: Date.now() };
         markDirty(`task:${t.id}`);
       }
       continue;
@@ -62,12 +63,12 @@ export function importBackup(b: GuestBackup, opts: { prefs: PrefsChoice; duplica
   const p = progressStore.get();
   const sess = new Map(p.sessions.map((s) => [s.id, s]));
   for (const s of b.progress.sessions) {
-    const id = sessionIdFor(s.startedAt);
+    const id = s.id ?? sessionIdFor(s.startedAt);
     if (!sess.has(id)) { sess.set(id, { ...s, id }); markDirty(`session:${id}`); }
   }
   const evs = new Map(p.steps.map((e) => [e.id, e]));
   for (const e of b.progress.steps) {
-    const id = e.id ?? uid();
+    const id = e.id ?? sessionIdFor(e.at);
     if (!evs.has(id)) { evs.set(id, { id, at: e.at, taskId: e.taskId }); markDirty(`event:${id}`); }
   }
   progressStore.set({ sessions: [...sess.values()].sort((a, c) => a.endedAt - c.endedAt), steps: [...evs.values()].sort((a, c) => a.at - c.at) });
@@ -76,15 +77,19 @@ export function importBackup(b: GuestBackup, opts: { prefs: PrefsChoice; duplica
   const likes = new Set(f.likes), dislikes = new Set(f.dislikes);
   for (const id of b.feedback.likes) if (!dislikes.has(id)) likes.add(id);
   for (const id of b.feedback.dislikes) if (!likes.has(id)) dislikes.add(id);
-  feedbackStore.set({ likes: [...likes], dislikes: [...dislikes] });
+  feedbackStore.set({ likes: [...likes], dislikes: [...dislikes], updatedAt: Date.now() });
   markDirty("feedback");
 
   if (opts.prefs === "device" || !prefsStore.get().onboarded) {
     prefsStore.set({ ...b.prefs, onboarded: true, updatedAt: Date.now() });
     markDirty("prefs");
   }
+  await syncNow();
+  const { pendingChanges, syncStore } = await import("./engine");
+  if (pendingChanges() || syncStore.get().status !== "idle" || !syncStore.get().ready) {
+    throw new Error("Import is saved on this device but hasn't reached your account yet. Your original backup is safe; reconnect and retry.");
+  }
   localStorage.removeItem(GUEST_BACKUP_KEY);
-  return syncNow();
 }
 
 export function downloadBackup(b: GuestBackup) {

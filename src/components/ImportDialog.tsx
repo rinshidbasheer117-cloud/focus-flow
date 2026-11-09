@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { analyze, discardBackup, downloadBackup, importBackup, type GuestBackup, type DuplicateChoice, type PrefsChoice } from "@/lib/sync/import";
+import { analyze, discardBackup, downloadBackup, importBackup, type GuestBackup, type DuplicateChoice, type PrefsChoice, type ConflictChoice } from "@/lib/sync/import";
+import { Button } from "@/components/ui/button";
 
 export function ImportDialog({ backup, onClose }: { backup: GuestBackup; onClose: () => void }) {
   const a = analyze(backup);
   const [prefs, setPrefs] = useState<PrefsChoice>("account");
   const [dups, setDups] = useState<DuplicateChoice>("keep-both");
   const [busy, setBusy] = useState(false);
+  const [conflicts, setConflicts] = useState<ConflictChoice>("account");
   const n = backup.tasks.length, s = backup.progress.sessions.length;
 
   return (
@@ -15,7 +17,7 @@ export function ImportDialog({ backup, onClose }: { backup: GuestBackup; onClose
         <h2 id="imp-title" className="text-xl font-bold">Bring your device data into your account?</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           This browser has {n} task{n === 1 ? "" : "s"} and {s} focus session{s === 1 ? "" : "s"} saved before you signed in.
-          {a.cloudTaskCount > 0 ? ` Your account already has ${a.cloudTaskCount} task${a.cloudTaskCount === 1 ? "" : "s"}.` : ""} Nothing in your account will be overwritten.
+          {a.cloudTaskCount > 0 ? ` Your account already has ${a.cloudTaskCount} task${a.cloudTaskCount === 1 ? "" : "s"}.` : ""} Your account copies stay unchanged unless you choose device copies below.
         </p>
 
         {a.sameTitle.length > 0 && (
@@ -25,7 +27,11 @@ export function ImportDialog({ backup, onClose }: { backup: GuestBackup; onClose
             <label className="mt-1 flex gap-2 text-sm"><input type="radio" className="accent-primary" checked={dups === "skip"} onChange={() => setDups("skip")} /> Skip the device copies</label>
           </fieldset>
         )}
-        {a.sameId.length > 0 && <p className="mt-3 text-xs text-muted-foreground">{a.sameId.length} task(s) already exist in your account; the more recently edited version will be kept.</p>}
+        {a.sameId.length > 0 && <fieldset className="mt-4">
+          <legend className="text-sm font-semibold">{a.sameId.length} task(s) already exist in your account</legend>
+          <label className="mt-2 flex gap-2 text-sm"><input type="radio" checked={conflicts === "account"} onChange={() => setConflicts("account")} /> Keep account copies</label>
+          <label className="mt-1 flex gap-2 text-sm"><input type="radio" checked={conflicts === "device"} onChange={() => setConflicts("device")} /> Replace with device copies</label>
+        </fieldset>}
         {a.prefsDiffer && (
           <fieldset className="mt-4">
             <legend className="text-sm font-semibold">Your preferences differ</legend>
@@ -35,17 +41,20 @@ export function ImportDialog({ backup, onClose }: { backup: GuestBackup; onClose
         )}
 
         <div className="mt-6 flex flex-col gap-2">
-          <button className="btn btn-primary" disabled={busy} onClick={async () => {
+          <Button className="btn btn-primary" disabled={busy} onClick={async () => {
             setBusy(true);
-            await importBackup(backup, { prefs, duplicates: dups });
-            toast.success("Device data imported into your account");
-            onClose();
-          }}>Import into my account</button>
-          <button className="btn btn-ghost" disabled={busy} onClick={() => {
+            try {
+              await importBackup(backup, { prefs, duplicates: dups, conflicts });
+              toast.success("Device data imported into your account");
+              onClose();
+            } catch (e) { toast.error((e as Error).message); }
+            finally { setBusy(false); }
+          }}>Import into my account</Button>
+          <Button variant="ghost" className="btn btn-ghost" disabled={busy} onClick={() => {
             if (!confirm("Discard this device's pre-account data? A copy will download first.")) return;
             downloadBackup(backup); discardBackup(); onClose();
-          }}>Don't import (download a copy, then discard)</button>
-          <button className="btn btn-ghost" disabled={busy} onClick={onClose}>Decide later</button>
+          }}>Don't import (download a copy, then discard)</Button>
+          <Button variant="ghost" className="btn btn-ghost" disabled={busy} onClick={onClose}>Decide later</Button>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">You can import later from Settings.</p>
       </div>
