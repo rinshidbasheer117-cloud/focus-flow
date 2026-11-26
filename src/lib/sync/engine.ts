@@ -95,7 +95,13 @@ async function pushKey(key: string, run: SyncRun): Promise<void> {
   }
   if (key === "feedback") {
     const f = feedbackStore.get();
-    check(await cloud.rpc("sync_feedback" as never, { p: { likes: f.likes, dislikes: f.dislikes, updated_at: new Date(f.updatedAt || Date.now()).toISOString() } } as never));
+    const result = check(await cloud.rpc("sync_feedback", {
+      p: { likes: f.likes, dislikes: f.dislikes, updated_at: new Date(f.updatedAt || Date.now()).toISOString() },
+    }));
+    assertCurrent(run);
+    if (result === "stale") {
+      toast("Kept newer music feedback from another device");
+    }
     return;
   }
   if (key === "active") {
@@ -239,7 +245,7 @@ export function syncNow(): Promise<void> {
       if (error || !data.session || data.session.user.id !== uid) throw new OfflineError("Sign in again to sync your saved changes.");
       // Pin this run to its original identity, even if another account signs in mid-request.
       const token = data.session.access_token;
-      const cloud = createClient<Database>(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, {
+      const cloud = createClient<Database>(import.meta.env["VITE_SUPABASE_URL"], import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"], {
         accessToken: async () => token,
         auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
       });

@@ -6,4 +6,5 @@
 - [ ] Account export + deletion
 - [ ] Acceptance tests (2 accounts, isolation, conflicts, offline)
 - [ ] Report
-- [ ] Fix retained-write queue, account-switch isolation, atomic music feedback, import conflict choices and recovery
+- [ ] Verify retained-write queue, account-switch isolation, import conflict choices and recovery
+- [x] Make music feedback sync atomic and reject stale snapshots

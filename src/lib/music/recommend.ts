@@ -5,9 +5,11 @@ import { markDirty } from "../sync/dirty";
 
 export const feedbackStore = createStore<{ likes: string[]; dislikes: string[]; updatedAt?: number }>("fb.musicFeedback", { likes: [], dislikes: [], updatedAt: 0 });
 export const useFeedback = feedbackStore.use;
+export const nextFeedbackUpdatedAt = (previous?: number) => Math.max(Date.now(), (previous ?? 0) + 1);
+
 export function setFeedback(id: string, kind: "like" | "dislike" | "none") {
   feedbackStore.set((f) => ({
-    updatedAt: Date.now(),
+    updatedAt: nextFeedbackUpdatedAt(f.updatedAt),
     likes: kind === "like" ? [...new Set([...f.likes, id])] : f.likes.filter((x) => x !== id),
     dislikes: kind === "dislike" ? [...new Set([...f.dislikes, id])] : f.dislikes.filter((x) => x !== id),
   }));

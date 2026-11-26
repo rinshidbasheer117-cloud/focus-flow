@@ -10,7 +10,7 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    for (const table of ["step_events", "focus_sessions", "music_feedback", "active_sessions", "task_steps", "tasks"] as const) {
+    for (const table of ["step_events", "focus_sessions", "music_feedback_sync_state", "music_feedback", "active_sessions", "task_steps", "tasks"] as const) {
       const { error } = await supabase.from(table).delete().eq("user_id", userId);
       if (error) {
         console.error("delete account", table, error);

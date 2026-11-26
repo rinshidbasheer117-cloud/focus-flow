@@ -10,9 +10,9 @@ import { feedbackStore } from "../music/recommend";
 beforeEach(() => { localStorage.clear(); [tasksStore, sessionStore, progressStore, prefsStore, feedbackStore, dirtyStore].forEach(s => s.reset()); });
 describe("Phase 2 persistence safeguards", () => {
   it("keeps a newer edit dirty when an earlier write finishes", () => {
-    markDirty("prefs"); const version = dirtyStore.get().keys.prefs ?? 0;
+    markDirty("prefs"); const version = dirtyStore.get().keys["prefs"] ?? 0;
     markDirty("prefs"); clearDirty("prefs", version);
-    expect(dirtyStore.get().keys.prefs).toBe(version + 1);
+    expect(dirtyStore.get().keys["prefs"]).toBe(version + 1);
   });
   it("timer completion never completes its task", () => {
     tasksStore.set({ tasks: [{ id: "task", title: "Open task", priority: "medium", done: false, createdAt: 1, steps: [{ id: "step", title: "First step", done: false }] }] });
