@@ -103,6 +103,21 @@ export type Database = {
         }
         Relationships: []
       }
+      music_feedback_sync_state: {
+        Row: {
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           animations: boolean
@@ -260,6 +275,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      sync_feedback: { Args: { p: Json }; Returns: string }
       sync_task: { Args: { p: Json }; Returns: string }
     }
     Enums: {

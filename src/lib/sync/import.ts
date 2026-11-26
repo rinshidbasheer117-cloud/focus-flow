@@ -2,7 +2,7 @@ import { uid } from "../store";
 import { tasksStore, type Task } from "../tasks";
 import { prefsStore, type Preferences } from "../prefs";
 import { progressStore, sessionIdFor, type SessionLog, type StepEvent } from "../progress";
-import { feedbackStore } from "../music/recommend";
+import { feedbackStore, nextFeedbackUpdatedAt } from "../music/recommend";
 import { markDirty } from "./dirty";
 import { GUEST_BACKUP_KEY, syncNow } from "./engine";
 
@@ -77,7 +77,7 @@ export async function importBackup(b: GuestBackup, opts: { prefs: PrefsChoice; d
   const likes = new Set(f.likes), dislikes = new Set(f.dislikes);
   for (const id of b.feedback.likes) if (!dislikes.has(id)) likes.add(id);
   for (const id of b.feedback.dislikes) if (!likes.has(id)) dislikes.add(id);
-  feedbackStore.set({ likes: [...likes], dislikes: [...dislikes], updatedAt: Date.now() });
+  feedbackStore.set({ likes: [...likes], dislikes: [...dislikes], updatedAt: nextFeedbackUpdatedAt(f.updatedAt) });
   markDirty("feedback");
 
   if (opts.prefs === "device" || !prefsStore.get().onboarded) {
